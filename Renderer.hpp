@@ -16,6 +16,9 @@ namespace GUI
         ~CRenderer( );
 
         void DrawRectFilled( float x, float y, float width, float height, const float color[ 4 ] );
+        void DrawRect( float x, float y, float width, float height, const float color[ 4 ] );
+
+        void DrawTriangle( float x1, float y1, float x2, float y2, float x3, float y3, const float color[ 4 ] );
 
     private:
         void InitializeShaders( );
@@ -33,6 +36,8 @@ namespace GUI
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
+
+		std::unordered_map<float, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> m_lineRasterizerStates;
     };
 
     extern std::unique_ptr<CRenderer> m_pRenderer;

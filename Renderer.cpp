@@ -39,6 +39,54 @@ namespace GUI
         m_pContext->Draw( 4, 0 );
     }
 
+    void CRenderer::DrawRect( float x, float y, float width, float height, const float color[ 4 ] )
+    {
+        Vertex vertices[ 5 ] = {
+            {{x,         y},          {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Верхний левый
+            {{x + width, y},          {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Верхний правый
+            {{x + width, y + height}, {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Нижний правый
+            {{x,         y + height}, {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Нижний левый
+            {{x,         y},          {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}  // Замыкаем контур
+        };
+
+        m_pContext->UpdateSubresource( m_pVertexBuffer.Get( ), 0, nullptr, vertices, 0, 0 );
+
+        m_pContext->VSSetShader( m_pVertexShader.Get( ), nullptr, 0 );
+        m_pContext->PSSetShader( m_pPixelShader.Get( ), nullptr, 0 );
+        m_pContext->IASetInputLayout( m_pInputLayout.Get( ) );
+
+        UINT stride = sizeof( Vertex );
+        UINT offset = 0;
+        m_pContext->IASetVertexBuffers( 0, 1, m_pVertexBuffer.GetAddressOf( ), &stride, &offset );
+
+        m_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP );
+
+        m_pContext->Draw( 5, 0 );
+    }
+
+    void CRenderer::DrawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, const float color[4])  
+    {  
+       Vertex vertices[3] = {  
+           {{x1, y1}, {color[0], color[1], color[2], color[3]}}, // Вершина 1  
+           {{x2, y2}, {color[0], color[1], color[2], color[3]}}, // Вершина 2  
+           {{x3, y3}, {color[0], color[1], color[2], color[3]}}  // Вершина 3  
+       };  
+
+       m_pContext->UpdateSubresource(m_pVertexBuffer.Get(), 0, nullptr, vertices, 0, 0);  
+
+       m_pContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);  
+       m_pContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);  
+       m_pContext->IASetInputLayout(m_pInputLayout.Get());  
+
+       UINT stride = sizeof(Vertex);  
+       UINT offset = 0;  
+       m_pContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);  
+
+       m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  
+
+       m_pContext->Draw(3, 0);  
+    }
+
     Microsoft::WRL::ComPtr<ID3DBlob> CRenderer::CompileShader(
            const std::wstring& filename,
            const std::string& entryPoint,
@@ -115,17 +163,12 @@ namespace GUI
 
     void CRenderer::InitializeBuffers( )
     {
-        std::vector<Vertex> vecVertices = {
-            {{0.0f, 0.0f}, {1,1,1,1}},
-            {{1.0f, 0.0f}, {1,1,1,1}},
-            {{1.0f, 1.0f}, {1,1,1,1}},
-            {{0.0f, 1.0f}, {1,1,1,1}}
-        };
-
         D3D11_BUFFER_DESC Desc = {};
-        Desc.ByteWidth = sizeof( Vertex ) * 4;
+        Desc.ByteWidth = sizeof( Vertex ) * 8; 
         Desc.Usage = D3D11_USAGE_DEFAULT;
         Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+  
+        std::vector<Vertex> vecVertices( 8 );
 
         D3D11_SUBRESOURCE_DATA Data = {};
         Data.pSysMem = vecVertices.data( );
