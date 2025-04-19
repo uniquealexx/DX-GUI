@@ -82,18 +82,28 @@ namespace GUI
 
         if ( m_pRenderer )
         {
-            float green[ 4 ] = { 0.0f, 1.0f, 0.0f, 1.0f };
-            m_pRenderer->DrawRectFilled( 300.0f, 200.0f, 150.0f, 150.0f, green );
+            // Основание домика (красный заполненный прямоугольник)
+            float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+            m_pRenderer->DrawRectFilled(200.0f, 300.0f, 200.0f, 150.0f, red); // X, Y, Width, Height
 
-            float red[ 4 ] = { 1.0f, 0.0f, 0.0f, 1.0f };
-            m_pRenderer->DrawRect( 50.0f, 50.0f, 150.0f, 150.0f, red );
+            // Крыша (синий треугольник поверх основания)
+            float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
+            m_pRenderer->DrawTriangle(
+                200.0f, 300.0f,   // A
+                300.0f, 200.0f,   // C
+                400.0f, 300.0f,   // B
+                blue
+            );
 
-            float blue[ 4 ] = { 0.0f, 0.0f, 1.0f, 1.0f };
-			m_pRenderer->DrawTriangle( 
-			400.0f, 100.0f,
-				500.0f, 300.0f,
-				300.0f, 300.0f,
-				blue );
+            // Дверь (зеленый прямоугольник)
+            float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+            m_pRenderer->DrawRectFilled(280.0f, 370.0f, 40.0f, 80.0f, green); // Центр: X = 200 + (200-40)/2
+
+            // Окна (синие с красной рамкой)
+            m_pRenderer->DrawRectFilled(230.0f, 350.0f, 50.0f, 50.0f, blue);  // Левое окно
+            m_pRenderer->DrawRectFilled(330.0f, 350.0f, 50.0f, 50.0f, blue);  // Правое окно
+            m_pRenderer->DrawRect(230.0f, 350.0f, 50.0f, 50.0f, red);         // Рамка
+            m_pRenderer->DrawRect(330.0f, 350.0f, 50.0f, 50.0f, red);
         }
 
         m_pSwapChain->Present( 1, 0 );
