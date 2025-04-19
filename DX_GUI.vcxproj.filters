@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>GUI\Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Window">
+      <UniqueIdentifier>{3e8500a6-93e3-4430-a57f-962052c09f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{cb3b2004-924a-4e37-9964-a003ac9e93cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{f76395d2-2cdf-4955-901e-1d1787ac8c46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Renderer">
+      <UniqueIdentifier>{96e280a9-39d2-4d8d-a544-4c7d17e875b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Framework">
+      <UniqueIdentifier>{93bdf5ea-068a-4632-86d3-de7d17ef9aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4b236447-4799-4de2-a976-a2a137ef1449}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window.hpp">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.hpp">
+      <Filter>GUI\Renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
