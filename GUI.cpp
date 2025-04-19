@@ -48,7 +48,6 @@ namespace GUI
 
         if ( SUCCEEDED( hr ) && m_pContext )
         {
-            // Создаем render target view
             Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
             hr = m_pSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( void** ) pBackBuffer.GetAddressOf( ) );
             if ( SUCCEEDED( hr ) )
@@ -58,7 +57,6 @@ namespace GUI
                 {
                     m_pContext->OMSetRenderTargets( 1, m_pRenderTarget.GetAddressOf( ), NULL );
 
-                    // Настройка viewport
                     D3D11_VIEWPORT viewport;
                     ZeroMemory( &viewport, sizeof( viewport ) );
                     viewport.Width = WIDTH_SCREEN;  

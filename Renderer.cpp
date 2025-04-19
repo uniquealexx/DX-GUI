@@ -17,7 +17,6 @@ namespace GUI
 
     void CRenderer::DrawRectFilled( float x, float y, float width, float height, const float color[ 4 ] )
     {
-        // Создаем временный буфер вершин с нужным цветом и координатами
         Vertex vertices[ 4 ] = {
             {{x,         y},          {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Верхний левый
             {{x + width, y},          {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}, // Верхний правый
@@ -25,23 +24,18 @@ namespace GUI
             {{x + width, y + height}, {color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ]}}  // Нижний правый
         };
 
-        // Обновляем вершинный буфер новыми данными
         m_pContext->UpdateSubresource( m_pVertexBuffer.Get( ), 0, nullptr, vertices, 0, 0 );
 
-        // Устанавливаем шейдеры и буферы
         m_pContext->VSSetShader( m_pVertexShader.Get( ), nullptr, 0 );
         m_pContext->PSSetShader( m_pPixelShader.Get( ), nullptr, 0 );
         m_pContext->IASetInputLayout( m_pInputLayout.Get( ) );
 
-        // Устанавливаем вершинный буфер
         UINT stride = sizeof( Vertex );
         UINT offset = 0;
         m_pContext->IASetVertexBuffers( 0, 1, m_pVertexBuffer.GetAddressOf( ), &stride, &offset );
 
-        // Устанавливаем примитивную топологию
         m_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
-        // Рисуем квадрат
         m_pContext->Draw( 4, 0 );
     }
 
@@ -86,7 +80,6 @@ namespace GUI
 
     void CRenderer::InitializeShaders( )
     {
-        // Компиляция вершинного шейдера
         auto vsBlob = CompileShader(
             L"Shaders/VertexShader.hlsl",
             "main",
@@ -98,7 +91,6 @@ namespace GUI
             nullptr,
             m_pVertexShader.GetAddressOf( ) );
 
-        // Компиляция пиксельного шейдера
         auto psBlob = CompileShader(
             L"Shaders/PixelShader.hlsl",
             "main",
@@ -110,7 +102,6 @@ namespace GUI
             nullptr,
             m_pPixelShader.GetAddressOf( ) );
 
-        // Создание входного лейаута
         D3D11_INPUT_ELEMENT_DESC Layout[] = {
             {"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0,
              D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -124,7 +115,6 @@ namespace GUI
 
     void CRenderer::InitializeBuffers( )
     {
-        // Вершины единичного квадрата
         std::vector<Vertex> vecVertices = {
             {{0.0f, 0.0f}, {1,1,1,1}},
             {{1.0f, 0.0f}, {1,1,1,1}},
@@ -132,7 +122,6 @@ namespace GUI
             {{0.0f, 1.0f}, {1,1,1,1}}
         };
 
-        // Создание вершинного буфера
         D3D11_BUFFER_DESC Desc = {};
         Desc.ByteWidth = sizeof( Vertex ) * 4;
         Desc.Usage = D3D11_USAGE_DEFAULT;

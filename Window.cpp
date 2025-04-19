@@ -68,7 +68,6 @@ namespace Window
             TranslateMessage( &msg );
             DispatchMessage( &msg );
 
-            // Render init
             if ( GUI::m_pGUI )
                 GUI::m_pGUI->Render( );
         }
@@ -110,9 +109,6 @@ namespace Window
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint( hwnd, &ps );
             EndPaint( hwnd, &ps );
-
-            if ( GUI::m_pGUI )
-                GUI::m_pGUI->Render( );
 
             return 0;
         }
