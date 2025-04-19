@@ -92,30 +92,33 @@ namespace GUI
 
         m_pContext->ClearRenderTargetView( m_pRenderTarget.Get( ), m_clearColor );
 
-        if ( m_pRenderer )
-        {
-            float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-            m_pRenderer->DrawRectFilled(200.0f, 300.0f, 200.0f, 150.0f, red); // X, Y, Width, Height
+        //if ( m_pRenderer )
+        //{
+        //    float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+        //    m_pRenderer->DrawRectFilled(200.0f, 300.0f, 200.0f, 150.0f, red); // X, Y, Width, Height
 
-            float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
-            m_pRenderer->DrawTriangle(
-                200.0f, 300.0f,   // A
-                300.0f, 200.0f,   // C
-                400.0f, 300.0f,   // B
-                blue
-            );
+        //    float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
+        //    m_pRenderer->DrawTriangle(
+        //        200.0f, 300.0f,   // A
+        //        300.0f, 200.0f,   // C
+        //        400.0f, 300.0f,   // B
+        //        blue
+        //    );
 
-            float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
-            m_pRenderer->DrawRectFilled(280.0f, 370.0f, 40.0f, 80.0f, green); 
+        //    float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+        //    m_pRenderer->DrawRectFilled(280.0f, 370.0f, 40.0f, 80.0f, green); 
 
-            m_pRenderer->DrawRectFilled(230.0f, 350.0f, 50.0f, 50.0f, blue);  
-            m_pRenderer->DrawRectFilled(330.0f, 350.0f, 50.0f, 50.0f, blue);  
-            m_pRenderer->DrawRect(230.0f, 350.0f, 50.0f, 50.0f, red);         
-            m_pRenderer->DrawRect(330.0f, 350.0f, 50.0f, 50.0f, red);
+        //    m_pRenderer->DrawRectFilled(230.0f, 350.0f, 50.0f, 50.0f, blue);  
+        //    m_pRenderer->DrawRectFilled(330.0f, 350.0f, 50.0f, 50.0f, blue);  
+        //    m_pRenderer->DrawRect(230.0f, 350.0f, 50.0f, 50.0f, red);         
+        //    m_pRenderer->DrawRect(330.0f, 350.0f, 50.0f, 50.0f, red);
 
-            float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
-            m_pRenderer->DrawText( L"Hello World", 250.0f, 320.0f, 200.0f, 50.0f, white );
-        }
+        //    float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        //    m_pRenderer->DrawText( L"Hello World", 250.0f, 320.0f, 200.0f, 50.0f, white );
+        //}
+
+        if (m_pFramework)
+            m_pFramework->Render();
 
         m_pSwapChain->Present( 1, 0 );
     }
@@ -162,10 +165,11 @@ namespace GUI
 
                         D3D11_VIEWPORT viewport = {
                             0.0f, 0.0f,
-                            ( FLOAT ) width, ( FLOAT ) height,
+                            static_cast<float>(width),
+                            static_cast<float>(height),
                             0.0f, 1.0f
                         };
-                        m_pContext->RSSetViewports( 1, &viewport );
+                        m_pContext->RSSetViewports(1, &viewport);
 
                         // Обновляем рендер таргет
                         m_pRenderer->OnDeviceRestored( m_pRenderTarget.Get( ) );

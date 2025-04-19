@@ -27,10 +27,23 @@ int WINAPI WinMain(
     if ( !m_pGUI )
         return 1;
 
-    while ( m_pWindow->IsRunning( ) )
+    m_pFramework = std::make_unique<GUI::CFramework>();
+
+    if (!m_pFramework)
+        return 1;
+
+    m_pFramework->Initialize();
+
+    while (m_pWindow->IsRunning())
     {
-        // messages and etc
-        Sleep( 10 );
+        MSG msg;
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        Sleep(10); 
     }
 
     return 0;

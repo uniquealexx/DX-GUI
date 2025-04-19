@@ -10,6 +10,14 @@ namespace Window
         int       nCmdShow;
     };
 
+    struct DragContext {
+        bool isDragging = false;
+        POINT mouseStartPos{};    // В координатах окна
+        float formStartX = 0.0f;  // Начальная позиция формы
+        float formStartY = 0.0f;
+    } static s_dragContext;
+
+
     class CWindow
     {
     public:
@@ -30,6 +38,9 @@ namespace Window
         HINSTANCE m_hInstance;
         int m_nCmdShow;
         bool m_bRunning = false;
+
+        float m_guiscaleX = 1.0f;
+        float m_guiscaleY = 1.0f;
     };
 
     extern std::unique_ptr<CWindow> m_pWindow;

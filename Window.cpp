@@ -97,8 +97,79 @@ namespace Window
 
     LRESULT CWindow::WindowProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
     {
-        switch ( uMsg )
+        RECT clientRect;
+        GetClientRect(hwnd, &clientRect);
+        const float scaleX = WIDTH_SCREEN / static_cast<float>(clientRect.right);
+        const float scaleY = HEIGHT_SCREEN / static_cast<float>(clientRect.bottom);
+
+        switch (uMsg)
         {
+        case WM_LBUTTONDOWN:
+        {
+            POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+            const float mouseX = pt.x * scaleX;
+            const float mouseY = pt.y * scaleY;
+
+            if (GUI::Framework::m_pForm && GUI::Framework::m_pForm->IsHovered(mouseX, mouseY))
+            {
+                s_dragContext.isDragging = true;
+                s_dragContext.mouseStartPos = pt;
+                s_dragContext.formStartX = GUI::Framework::m_pForm->GetX();
+                s_dragContext.formStartY = GUI::Framework::m_pForm->GetY();
+                SetCapture(hwnd);
+            }
+            return 0;
+        }
+
+        case WM_MOUSEMOVE:
+        {
+            if (s_dragContext.isDragging && GUI::Framework::m_pForm)
+            {
+                POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+
+                // Вычисляем дельту в GUI-координатах
+                const float deltaX = (pt.x - s_dragContext.mouseStartPos.x) * scaleX;
+                const float deltaY = (pt.y - s_dragContext.mouseStartPos.y) * scaleY;
+
+                // Рассчитываем новую позицию с учетом ограничений
+                float newX = s_dragContext.formStartX + deltaX;
+                float newY = s_dragContext.formStartY + deltaY;
+
+                // Применяем ограничения сразу при перемещении
+                const float formWidth = GUI::Framework::m_pForm->GetWidth();
+                const float formHeight = GUI::Framework::m_pForm->GetHeight();
+
+                // Вместо жесткого clamp
+                const float SNAP_THRESHOLD = 10.0f; // Пиксели для прилипания
+
+                newX = std::clamp(newX, -SNAP_THRESHOLD, WIDTH_SCREEN - formWidth + SNAP_THRESHOLD);
+                newY = std::clamp(newY, -SNAP_THRESHOLD, HEIGHT_SCREEN - formHeight + SNAP_THRESHOLD);
+
+                // Применяем прилипание
+                if (newX < 0) newX = 0;
+                else if (newX > WIDTH_SCREEN - formWidth) newX = WIDTH_SCREEN - formWidth;
+
+                if (newY < 0) newY = 0;
+                else if (newY > HEIGHT_SCREEN - formHeight) newY = HEIGHT_SCREEN - formHeight;
+
+                GUI::Framework::m_pForm->SetPosition(newX, newY);
+
+                // Форсируем перерисовку
+                InvalidateRect(hwnd, NULL, FALSE);
+                UpdateWindow(hwnd);
+            }
+            return 0;
+        }
+        case WM_LBUTTONUP:
+        {
+            if (s_dragContext.isDragging)
+            {
+                s_dragContext.isDragging = false;
+                ReleaseCapture();
+            }
+            return 0;
+        }
+
         case WM_DESTROY:
             PostQuitMessage( 0 );
             m_bRunning = false;
@@ -113,9 +184,16 @@ namespace Window
         }
        
         case WM_SIZE:
-            if ( GUI::m_pGUI )
-                GUI::m_pGUI->OnResize( LOWORD( lParam ), HIWORD( lParam ) );
+        {
+            const UINT width = LOWORD(lParam);
+            const UINT height = HIWORD(lParam);
+            m_guiscaleX = WIDTH_SCREEN / width;
+            m_guiscaleY = HEIGHT_SCREEN / height;
+            if (GUI::m_pGUI) {
+                GUI::m_pGUI->OnResize(width, height);
+            }
             break;
+        }
 
         default:
             return DefWindowProc( hwnd, uMsg, wParam, lParam );
