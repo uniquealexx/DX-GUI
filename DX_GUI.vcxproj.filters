@@ -11,6 +11,12 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>GUI\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Framework.cpp">
+      <Filter>GUI\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Form.cpp">
+      <Filter>GUI\Framework\Form</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Window">
@@ -31,6 +37,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{4b236447-4799-4de2-a976-a2a137ef1449}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Framework\Form">
+      <UniqueIdentifier>{a9398479-2609-4fee-9afe-81433b2c0431}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.hpp">
@@ -47,6 +56,12 @@
     </ClInclude>
     <ClInclude Include="Renderer.hpp">
       <Filter>GUI\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework.hpp">
+      <Filter>GUI\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Form.hpp">
+      <Filter>GUI\Framework\Form</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,14 +12,34 @@ namespace GUI::Framework
     {
         if (!GUI::m_pRenderer) return;
 
-        float bgColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+        // Отрисовка фона формы
+        float bgColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
         GUI::m_pRenderer->DrawRectFilled(m_x, m_y, m_width, m_height, bgColor);
 
-        float borderColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        GUI::m_pRenderer->DrawRect(m_x, m_y, m_width, m_height, borderColor);
+        // Отрисовка заголовка
+        float titleBarColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
+        GUI::m_pRenderer->DrawRectFilled(m_x, m_y, m_width, m_titleBarHeight, titleBarColor);
 
+        // Отрисовка текста заголовка
         float textColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        GUI::m_pRenderer->DrawText(L"meme kekw", m_x + 5, m_y + 5, m_width, m_height, borderColor);
+        GUI::m_pRenderer->DrawText(
+            m_title,
+            m_x + 5.0f, // Отступ слева
+            m_y + (m_titleBarHeight - 15.0f) / 2, // Вертикальное выравнивание
+            m_width - 10.0f, // Максимальная ширина
+            15.0f,           // Высота текста
+            textColor
+        );
+
+        // Отрисовка границы
+        float borderColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+        GUI::m_pRenderer->DrawRect(m_x, m_y, m_width, m_height, borderColor);
+    }
+
+    void CForm::SetTitle(const std::wstring& title)
+    {
+        m_title = title;
+        // Можно добавить обрезку длинного текста при необходимости
     }
 
     void CForm::SetPosition(float x, float y)

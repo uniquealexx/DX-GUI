@@ -20,6 +20,7 @@ namespace GUI
         {
             Framework::m_pForm->SetPosition(50, 50);
             Framework::m_pForm->SetSize(300, 200);
+            Framework::m_pForm->SetTitle(L"Main Window");
         }
     }
 

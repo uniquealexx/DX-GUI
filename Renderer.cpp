@@ -89,29 +89,37 @@ namespace GUI
        m_pContext->Draw(3, 0);  
     }
 
-    void CRenderer::DrawText( const std::wstring& text, float x, float y, float width, float height, const float color[ 4 ] )
+    void CRenderer::DrawText(
+        const std::wstring& text,
+        float x, float y,
+        float maxWidth, float maxHeight,
+        const float color[4])
     {
-        if ( !m_pD2DRenderTarget || !m_pTextFormat ) return;
+        if (!m_pD2DRenderTarget || !m_pTextFormat) return;
 
-        m_pD2DRenderTarget->BeginDraw( );
+        m_pD2DRenderTarget->BeginDraw();
 
         Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
-        D2D1_COLOR_F d2dColor = D2D1::ColorF( color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ] );
-        m_pD2DRenderTarget->CreateSolidColorBrush( d2dColor, &pBrush );
+        D2D1_COLOR_F d2dColor = D2D1::ColorF(color[0], color[1], color[2], color[3]);
+        m_pD2DRenderTarget->CreateSolidColorBrush(d2dColor, &pBrush);
 
-        D2D1_RECT_F layoutRect = D2D1::RectF( x, y, x + width, y + height );
+        D2D1_RECT_F layoutRect = D2D1::RectF(x, y, x + maxWidth, y + maxHeight);
+
+        // Установка выравнивания
+        m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+        m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
         m_pD2DRenderTarget->DrawTextW(
-            text.c_str( ),
-            static_cast< UINT32 >( text.size( ) ),
-            m_pTextFormat.Get( ),
+            text.c_str(),
+            static_cast<UINT32>(text.size()),
+            m_pTextFormat.Get(),
             layoutRect,
-            pBrush.Get( )
+            pBrush.Get()
         );
 
-        HRESULT hr = m_pD2DRenderTarget->EndDraw( );
-        if ( hr == D2DERR_RECREATE_TARGET )
-            InitializeTextRendering( );
+        HRESULT hr = m_pD2DRenderTarget->EndDraw();
+        if (hr == D2DERR_RECREATE_TARGET)
+            InitializeTextRendering();
     }
 
     void CRenderer::OnDeviceRestored( ID3D11RenderTargetView* pRenderTarget )
@@ -296,7 +304,7 @@ namespace GUI
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
             DWRITE_FONT_STRETCH_NORMAL,
-            24.0f,
+            14.0f,
             L"en-us",
             m_pTextFormat.GetAddressOf( )
         );
