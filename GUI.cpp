@@ -7,9 +7,16 @@ namespace GUI
     CGUI::CGUI( HWND hwnd ) : m_hwnd( hwnd )
     {
         InitializeD3D( hwnd );
-        m_pRenderer = std::make_unique<CRenderer>( m_pDevice, m_pContext );
-    }
 
+        if ( !m_pRenderTarget )
+            throw std::exception( "Render Target not initialized!" );
+
+        m_pRenderer = std::make_unique<CRenderer>(
+            m_pDevice,
+            m_pContext,
+            m_pRenderTarget.Get( )
+        );
+    }
     CGUI::~CGUI( )
     {
         CleanupD3D( );
@@ -28,12 +35,17 @@ namespace GUI
         scd.Windowed = TRUE;
         scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
+        UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
         D3D_FEATURE_LEVEL featureLevel;
         HRESULT hr = D3D11CreateDeviceAndSwapChain(
             NULL,
             D3D_DRIVER_TYPE_HARDWARE,
             NULL,
-            0,
+            createDeviceFlags,  
             NULL,
             0,
             D3D11_SDK_VERSION,
@@ -82,11 +94,9 @@ namespace GUI
 
         if ( m_pRenderer )
         {
-            // Основание домика (красный заполненный прямоугольник)
             float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
             m_pRenderer->DrawRectFilled(200.0f, 300.0f, 200.0f, 150.0f, red); // X, Y, Width, Height
 
-            // Крыша (синий треугольник поверх основания)
             float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
             m_pRenderer->DrawTriangle(
                 200.0f, 300.0f,   // A
@@ -95,18 +105,74 @@ namespace GUI
                 blue
             );
 
-            // Дверь (зеленый прямоугольник)
             float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
-            m_pRenderer->DrawRectFilled(280.0f, 370.0f, 40.0f, 80.0f, green); // Центр: X = 200 + (200-40)/2
+            m_pRenderer->DrawRectFilled(280.0f, 370.0f, 40.0f, 80.0f, green); 
 
-            // Окна (синие с красной рамкой)
-            m_pRenderer->DrawRectFilled(230.0f, 350.0f, 50.0f, 50.0f, blue);  // Левое окно
-            m_pRenderer->DrawRectFilled(330.0f, 350.0f, 50.0f, 50.0f, blue);  // Правое окно
-            m_pRenderer->DrawRect(230.0f, 350.0f, 50.0f, 50.0f, red);         // Рамка
+            m_pRenderer->DrawRectFilled(230.0f, 350.0f, 50.0f, 50.0f, blue);  
+            m_pRenderer->DrawRectFilled(330.0f, 350.0f, 50.0f, 50.0f, blue);  
+            m_pRenderer->DrawRect(230.0f, 350.0f, 50.0f, 50.0f, red);         
             m_pRenderer->DrawRect(330.0f, 350.0f, 50.0f, 50.0f, red);
+
+            float white[ 4 ] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            m_pRenderer->DrawText( L"Hello World", 250.0f, 320.0f, 200.0f, 50.0f, white );
         }
 
         m_pSwapChain->Present( 1, 0 );
+    }
+
+    void CGUI::OnResize( UINT width, UINT height )
+    {
+        if ( m_pSwapChain && width > 0 && height > 0 )
+        {
+            m_pContext->OMSetRenderTargets( 0, nullptr, nullptr );
+            m_pRenderTarget.Reset( );
+
+            HRESULT hr = m_pSwapChain->ResizeBuffers(
+                0,
+                width,
+                height,
+                DXGI_FORMAT_UNKNOWN,
+                0
+            );
+
+            if ( SUCCEEDED( hr ) )
+            {
+                Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
+                hr = m_pSwapChain->GetBuffer(
+                    0,
+                    __uuidof( ID3D11Texture2D ),
+                    ( void** ) pBackBuffer.GetAddressOf( )
+                );
+
+                if ( SUCCEEDED( hr ) )
+                {
+                    hr = m_pDevice->CreateRenderTargetView(
+                        pBackBuffer.Get( ),
+                        nullptr,
+                        m_pRenderTarget.GetAddressOf( )
+                    );
+
+                    if ( SUCCEEDED( hr ) && m_pRenderer )
+                    {
+                        m_pContext->OMSetRenderTargets(
+                            1,
+                            m_pRenderTarget.GetAddressOf( ),
+                            nullptr
+                        );
+
+                        D3D11_VIEWPORT viewport = {
+                            0.0f, 0.0f,
+                            ( FLOAT ) width, ( FLOAT ) height,
+                            0.0f, 1.0f
+                        };
+                        m_pContext->RSSetViewports( 1, &viewport );
+
+                        // Обновляем рендер таргет
+                        m_pRenderer->OnDeviceRestored( m_pRenderTarget.Get( ) );
+                    }
+                }
+            }
+        }
     }
 
     void CGUI::CleanupD3D( )

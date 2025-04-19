@@ -3,6 +3,8 @@
 #include "Precompiled.hpp"
 
 #include <d3d11.h>
+#include <d2d1.h>
+#include <dwrite.h>
 #include <dxgi.h>
 #include <DirectXMath.h>
 #include <D3Dcompiler.h>

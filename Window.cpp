@@ -109,9 +109,13 @@ namespace Window
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint( hwnd, &ps );
             EndPaint( hwnd, &ps );
-
             return 0;
         }
+       
+        case WM_SIZE:
+            if ( GUI::m_pGUI )
+                GUI::m_pGUI->OnResize( LOWORD( lParam ), HIWORD( lParam ) );
+            break;
 
         default:
             return DefWindowProc( hwnd, uMsg, wParam, lParam );

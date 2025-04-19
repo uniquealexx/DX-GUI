@@ -9,6 +9,7 @@ namespace GUI
         ~CGUI( );
 
         void Render( );
+        void OnResize( UINT width, UINT height );
 
     private:
         void InitializeD3D( HWND hwnd );
