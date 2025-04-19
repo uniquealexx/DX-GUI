@@ -127,25 +127,20 @@ namespace Window
             {
                 POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 
-                // Вычисляем дельту в GUI-координатах
                 const float deltaX = (pt.x - s_dragContext.mouseStartPos.x) * scaleX;
                 const float deltaY = (pt.y - s_dragContext.mouseStartPos.y) * scaleY;
 
-                // Рассчитываем новую позицию с учетом ограничений
                 float newX = s_dragContext.formStartX + deltaX;
                 float newY = s_dragContext.formStartY + deltaY;
 
-                // Применяем ограничения сразу при перемещении
                 const float formWidth = GUI::Framework::m_pForm->GetWidth();
                 const float formHeight = GUI::Framework::m_pForm->GetHeight();
 
-                // Вместо жесткого clamp
-                const float SNAP_THRESHOLD = 10.0f; // Пиксели для прилипания
+                const float SNAP_THRESHOLD = 10.0f; 
 
                 newX = std::clamp(newX, -SNAP_THRESHOLD, WIDTH_SCREEN - formWidth + SNAP_THRESHOLD);
                 newY = std::clamp(newY, -SNAP_THRESHOLD, HEIGHT_SCREEN - formHeight + SNAP_THRESHOLD);
 
-                // Применяем прилипание
                 if (newX < 0) newX = 0;
                 else if (newX > WIDTH_SCREEN - formWidth) newX = WIDTH_SCREEN - formWidth;
 
@@ -154,7 +149,6 @@ namespace Window
 
                 GUI::Framework::m_pForm->SetPosition(newX, newY);
 
-                // Форсируем перерисовку
                 InvalidateRect(hwnd, NULL, FALSE);
                 UpdateWindow(hwnd);
             }

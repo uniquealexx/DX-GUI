@@ -12,8 +12,8 @@ namespace Window
 
     struct DragContext {
         bool isDragging = false;
-        POINT mouseStartPos{};    // В координатах окна
-        float formStartX = 0.0f;  // Начальная позиция формы
+        POINT mouseStartPos{};   
+        float formStartX = 0.0f;  
         float formStartY = 0.0f;
     } static s_dragContext;
 

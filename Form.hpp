@@ -23,7 +23,14 @@ namespace GUI::Framework
         float GetHeight() const { return m_height; }
         const std::wstring& GetTitle() const { return m_title; }
 
+        void AddChild(std::unique_ptr<CChild> child);
+        const std::vector<std::unique_ptr<CChild>>& GetChildren() const { return m_children; }
+
+        void UpdateLayout();
+
     private:
+        std::vector<std::unique_ptr<CChild>> m_children;
+
         std::wstring m_title = L"New Form";
         float m_titleBarHeight = 25.0f;
         DWRITE_FONT_WEIGHT m_titleFontWeight = DWRITE_FONT_WEIGHT_BOLD;
@@ -33,6 +40,9 @@ namespace GUI::Framework
         bool m_bDragging = false;
         float m_dragOffsetX = 0;
         float m_dragOffsetY = 0;
+        float m_padding = 5.0f;    
+        float m_gap = 5.0f;        
+        float m_childHeight = 30.0f;
     };
 
     extern std::unique_ptr<CForm> m_pForm;

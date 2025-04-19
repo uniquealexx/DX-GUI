@@ -171,7 +171,6 @@ namespace GUI
                         };
                         m_pContext->RSSetViewports(1, &viewport);
 
-                        // Обновляем рендер таргет
                         m_pRenderer->OnDeviceRestored( m_pRenderTarget.Get( ) );
                     }
                 }

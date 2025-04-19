@@ -12,34 +12,36 @@ namespace GUI::Framework
     {
         if (!GUI::m_pRenderer) return;
 
-        // Отрисовка фона формы
         float bgColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
         GUI::m_pRenderer->DrawRectFilled(m_x, m_y, m_width, m_height, bgColor);
 
-        // Отрисовка заголовка
         float titleBarColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
         GUI::m_pRenderer->DrawRectFilled(m_x, m_y, m_width, m_titleBarHeight, titleBarColor);
 
-        // Отрисовка текста заголовка
         float textColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
         GUI::m_pRenderer->DrawText(
             m_title,
-            m_x + 5.0f, // Отступ слева
-            m_y + (m_titleBarHeight - 15.0f) / 2, // Вертикальное выравнивание
-            m_width - 10.0f, // Максимальная ширина
-            15.0f,           // Высота текста
+            m_x + 5.0f, 
+            m_y + (m_titleBarHeight - 15.0f) / 2, 
+            m_width - 10.0f, 
+            15.0f,         
             textColor
         );
 
-        // Отрисовка границы
         float borderColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
         GUI::m_pRenderer->DrawRect(m_x, m_y, m_width, m_height, borderColor);
+
+        UpdateLayout();
+
+        for (auto& child : m_children)
+        {
+            child->Render(m_x, m_y);
+        }
     }
 
     void CForm::SetTitle(const std::wstring& title)
     {
         m_title = title;
-        // Можно добавить обрезку длинного текста при необходимости
     }
 
     void CForm::SetPosition(float x, float y)
@@ -52,6 +54,8 @@ namespace GUI::Framework
     {
         m_width = width;
         m_height = height;
+
+        UpdateLayout();
     }
 
     bool CForm::IsHovered(float mouseX, float mouseY) const
@@ -78,4 +82,35 @@ namespace GUI::Framework
             m_bDragging = false;
         }
     }
+
+    void CForm::UpdateLayout()
+    {
+        const size_t childCount = m_children.size();
+        if (childCount == 0) return;
+
+        const float availableWidth = m_width - 2 * m_padding;
+        const float availableHeight = m_height - m_titleBarHeight - 2 * m_padding;
+        const float startY = m_titleBarHeight + m_padding;
+
+        if (childCount == 1)
+        {
+            auto& child = m_children[0];
+            child->SetPosition(m_padding, startY);
+            child->SetSize(availableWidth, availableHeight);
+        }
+        else
+        {
+            const float totalGaps = (childCount - 1) * m_gap;
+            const float childWidth = (availableWidth - totalGaps) / childCount;
+
+            float currentX = m_padding;
+            for (auto& child : m_children)
+            {
+                child->SetPosition(currentX, startY);
+                child->SetSize(childWidth, availableHeight);
+                currentX += childWidth + m_gap;
+            }
+        }
+    }
 }
+

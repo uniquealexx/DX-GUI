@@ -17,6 +17,9 @@
     <ClCompile Include="Form.cpp">
       <Filter>GUI\Framework\Form</Filter>
     </ClCompile>
+    <ClCompile Include="Child.cpp">
+      <Filter>GUI\Framework\Child</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Window">
@@ -40,6 +43,9 @@
     <Filter Include="GUI\Framework\Form">
       <UniqueIdentifier>{a9398479-2609-4fee-9afe-81433b2c0431}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Framework\Child">
+      <UniqueIdentifier>{0f65db33-987d-42c2-a741-7436e1f28b8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.hpp">
@@ -62,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="Form.hpp">
       <Filter>GUI\Framework\Form</Filter>
+    </ClInclude>
+    <ClInclude Include="Child.hpp">
+      <Filter>GUI\Framework\Child</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

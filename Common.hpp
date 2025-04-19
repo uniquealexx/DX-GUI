@@ -10,10 +10,11 @@
 #include <D3Dcompiler.h>
 
 #define WIDTH_SCREEN 800.0f
-#define HEIGHT_SCREEN 800.0f
+#define HEIGHT_SCREEN 600.0f
 
 #include "Window.hpp"
 #include "GUI.hpp"
 #include "Framework.hpp" 
+#include "Child.hpp"
 #include "Form.hpp"
 #include "Renderer.hpp"

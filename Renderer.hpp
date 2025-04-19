@@ -21,8 +21,16 @@ namespace GUI
         void DrawRectFilled( float x, float y, float width, float height, const float color[ 4 ] );
         void DrawRect( float x, float y, float width, float height, const float color[ 4 ] );
         void DrawTriangle( float x1, float y1, float x2, float y2, float x3, float y3, const float color[ 4 ] );
-        void DrawText( const std::wstring& text, float x, float y, float width, float height, const float color[ 4 ] );
+        void DrawText(
+            const std::wstring& text,
+            float x, float y,
+            float width, float height,
+            const float color[4],
+            DWRITE_FONT_WEIGHT fontWeight = DWRITE_FONT_WEIGHT_NORMAL // Новый параметр
+        );
+
         void OnDeviceRestored( ID3D11RenderTargetView* pRenderTarget );
+
     private:
         void InitializeShaders( );
         void InitializeBuffers( );

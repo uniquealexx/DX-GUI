@@ -89,13 +89,28 @@ namespace GUI
        m_pContext->Draw(3, 0);  
     }
 
+    // В CRenderer.cpp
     void CRenderer::DrawText(
         const std::wstring& text,
         float x, float y,
-        float maxWidth, float maxHeight,
-        const float color[4])
+        float width, float height,
+        const float color[4],
+        DWRITE_FONT_WEIGHT fontWeight)
     {
-        if (!m_pD2DRenderTarget || !m_pTextFormat) return;
+        if (!m_pD2DRenderTarget) return;
+
+        // Создаем временный TextFormat с нужным стилем
+        Microsoft::WRL::ComPtr<IDWriteTextFormat> pTextFormat;
+        m_pDWriteFactory->CreateTextFormat(
+            L"SegoeUI",
+            nullptr,
+            fontWeight,
+            DWRITE_FONT_STYLE_NORMAL,
+            DWRITE_FONT_STRETCH_NORMAL,
+            14.0f,
+            L"en-us",
+            &pTextFormat
+        );
 
         m_pD2DRenderTarget->BeginDraw();
 
@@ -103,23 +118,20 @@ namespace GUI
         D2D1_COLOR_F d2dColor = D2D1::ColorF(color[0], color[1], color[2], color[3]);
         m_pD2DRenderTarget->CreateSolidColorBrush(d2dColor, &pBrush);
 
-        D2D1_RECT_F layoutRect = D2D1::RectF(x, y, x + maxWidth, y + maxHeight);
+        D2D1_RECT_F layoutRect = D2D1::RectF(x, y, x + width, y + height);
 
-        // Установка выравнивания
-        m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-        m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+        pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+        pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
         m_pD2DRenderTarget->DrawTextW(
             text.c_str(),
             static_cast<UINT32>(text.size()),
-            m_pTextFormat.Get(),
+            pTextFormat.Get(),
             layoutRect,
             pBrush.Get()
         );
 
-        HRESULT hr = m_pD2DRenderTarget->EndDraw();
-        if (hr == D2DERR_RECREATE_TARGET)
-            InitializeTextRendering();
+        m_pD2DRenderTarget->EndDraw();
     }
 
     void CRenderer::OnDeviceRestored( ID3D11RenderTargetView* pRenderTarget )
@@ -297,17 +309,5 @@ namespace GUI
             sprintf_s( buffer, "CreateDxgiSurfaceRenderTarget failed: 0x%08X. Убедитесь, что D3D устройство создано с флагом D3D11_CREATE_DEVICE_BGRA_SUPPORT", hr );
             throw std::exception( buffer );
         }
-
-        hr = m_pDWriteFactory->CreateTextFormat(
-            L"Arial",
-            nullptr,
-            DWRITE_FONT_WEIGHT_NORMAL,
-            DWRITE_FONT_STYLE_NORMAL,
-            DWRITE_FONT_STRETCH_NORMAL,
-            14.0f,
-            L"en-us",
-            m_pTextFormat.GetAddressOf( )
-        );
-        if ( FAILED( hr ) )
-            throw std::exception( ( "CreateTextFormat failed: 0x" + std::to_string( hr ) ).c_str( ) );
-    }}
+    }
+}

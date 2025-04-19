@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Child.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Child.hpp" />
     <ClInclude Include="Common.hpp" />
     <ClInclude Include="Form.hpp" />
     <ClInclude Include="Framework.hpp" />
