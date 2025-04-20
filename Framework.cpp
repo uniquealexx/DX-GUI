@@ -22,20 +22,23 @@ namespace GUI
             Framework::m_pForm->SetSize(400, 500);
             Framework::m_pForm->SetTitle(L"Main Window");
 
-            auto grandparent = std::make_unique<Framework::CChild>();
-            auto parent = std::make_unique<Framework::CChild>();
             auto child = std::make_unique<Framework::CChild>();
             auto child2 = std::make_unique<Framework::CChild>();
 
-            grandparent->SetTitle(L"keke");
-            parent->SetTitle(L"meme");
-            child->SetTitle(L"lol");
-            child2->SetTitle(L"xddd");
+            child->SetTitle(L"Child1");
+            child2->SetTitle(L"Child2");
 
-            parent->AddChild(std::move(child));
-            parent->AddChild(std::move(child2));
-            grandparent->AddChild(std::move(parent));
-            Framework::m_pForm->AddChild(std::move(grandparent));
+            auto button1 = std::make_unique<Framework::Widget::CButton>(L"Click Me");
+            button1->SetPosition(10.0f, 30.0f);
+            button1->SetSize(80.0f, 25.0f);
+            button1->SetCallback([]() {
+                OutputDebugStringA("Button clicked!\n");
+                });
+
+            child->AddWidget(std::move(button1));
+
+            Framework::m_pForm->AddChild(std::move(child));
+            Framework::m_pForm->AddChild(std::move(child2));
         }
     }
 

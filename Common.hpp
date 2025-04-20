@@ -12,9 +12,12 @@
 #define WIDTH_SCREEN 800.0f
 #define HEIGHT_SCREEN 600.0f
 
-#include "Window.hpp"
-#include "GUI.hpp"
+
+#include "Renderer.hpp"
 #include "Framework.hpp" 
+#include "Widget.hpp"
+#include "Button.hpp"
 #include "Child.hpp"
 #include "Form.hpp"
-#include "Renderer.hpp"
+#include "Window.hpp"
+#include "GUI.hpp"

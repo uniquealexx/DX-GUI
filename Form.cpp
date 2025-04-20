@@ -21,10 +21,10 @@ namespace GUI::Framework
         float textColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
         GUI::m_pRenderer->DrawText(
             m_title,
-            m_x + 5.0f, 
-            m_y + (m_titleBarHeight - 15.0f) / 2, 
-            m_width - 10.0f, 
-            15.0f,         
+            m_x + 5.0f,
+            m_y + (m_titleBarHeight - 15.0f) / 2,
+            m_width - 10.0f,
+            15.0f,
             textColor
         );
 
@@ -33,10 +33,63 @@ namespace GUI::Framework
 
         UpdateLayout();
 
+        // Render child components first
         for (auto& child : m_children)
         {
             child->Render(m_x, m_y);
         }
+
+        // Render widgets
+        for (auto& widget : m_widgets)
+        {
+            widget->Render(m_x, m_y);
+        }
+    }
+
+    // Implement IWidgets interface
+    void CForm::AddWidget(std::unique_ptr<IWidget> widget)
+    {
+        if (widget) {
+            m_widgets.emplace_back(std::move(widget));
+        }
+    }
+
+    bool CForm::HandleWidgetEvents(float mouseX, float mouseY, bool isMouseDown)
+    {
+        float localMouseX = mouseX - m_x;
+        float localMouseY = mouseY - m_y;
+
+        if (localMouseX < 0 || localMouseX > m_width ||
+            localMouseY < 0 || localMouseY > m_height)
+        {
+            return false;
+        }
+
+        for (auto it = m_widgets.rbegin(); it != m_widgets.rend(); ++it)
+        {
+            auto& widget = *it;
+            if (widget->IsHovered(localMouseX, localMouseY))
+            {
+                if (isMouseDown)
+                {
+                    if (widget->HandleMouseClick(localMouseX, localMouseY))
+                    {
+                        return true;
+                    }
+                }
+                return true;
+            }
+        }
+
+        for (auto& child : m_children)
+        {
+            if (child->HandleWidgetEvents(localMouseX, localMouseY, isMouseDown))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void CForm::SetTitle(const std::wstring& title)

@@ -2,7 +2,7 @@
 
 namespace GUI::Framework
 {
-    class CChild
+    class CChild : public IWidgets
     {
     public:
         CChild();
@@ -22,8 +22,14 @@ namespace GUI::Framework
         float GetHeight() const { return m_height; }
 
         void AddChild(std::unique_ptr<CChild> child);
-        void UpdateChildLayout();
         const std::vector<std::unique_ptr<CChild>>& GetChildren() const;
+
+        void AddWidget(std::unique_ptr<IWidget> widget) override;
+        const std::vector<std::unique_ptr<IWidget>>& GetWidgets() const { return m_widgets; }
+
+        bool HandleWidgetEvents(float mouseX, float mouseY, bool isMouseDown);
+
+        void UpdateChildLayout();
 
     private:
         float m_x = 0.0f;
@@ -41,5 +47,8 @@ namespace GUI::Framework
         std::vector<std::unique_ptr<CChild>> m_children; 
         float m_childPadding = 5.0f;
         float m_childGap = 5.0f;    
+
+        std::vector<std::unique_ptr<IWidget>> m_widgets;
+
     };
 }

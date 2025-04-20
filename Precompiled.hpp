@@ -11,5 +11,6 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <functional>
 
 #include <wrl/client.h>

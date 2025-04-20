@@ -2,7 +2,7 @@
 
 namespace GUI::Framework
 {
-    class CForm
+    class CForm : IWidgets
     {
     public:
         CForm();
@@ -26,10 +26,16 @@ namespace GUI::Framework
         void AddChild(std::unique_ptr<CChild> child);
         const std::vector<std::unique_ptr<CChild>>& GetChildren() const { return m_children; }
 
+        void AddWidget(std::unique_ptr<IWidget> widget) override;
+        const std::vector<std::unique_ptr<IWidget>>& GetWidgets() const { return m_widgets; }
+
+        bool HandleWidgetEvents(float mouseX, float mouseY, bool isMouseDown);
+
         void UpdateLayout();
 
     private:
         std::vector<std::unique_ptr<CChild>> m_children;
+        std::vector<std::unique_ptr<IWidget>> m_widgets;
 
         std::wstring m_title = L"New Form";
         float m_titleBarHeight = 25.0f;

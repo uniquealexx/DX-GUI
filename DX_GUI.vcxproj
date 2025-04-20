@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Child.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="Framework.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.hpp" />
     <ClInclude Include="Child.hpp" />
     <ClInclude Include="Common.hpp" />
     <ClInclude Include="Form.hpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="GUI.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="Widget.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>

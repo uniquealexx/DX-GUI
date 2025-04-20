@@ -110,6 +110,9 @@ namespace Window
             const float mouseX = pt.x * scaleX;
             const float mouseY = pt.y * scaleY;
 
+            if (GUI::Framework::m_pForm && GUI::Framework::m_pForm->HandleWidgetEvents(mouseX, mouseY, true)) 
+                return 0;
+
             if (GUI::Framework::m_pForm && GUI::Framework::m_pForm->IsHovered(mouseX, mouseY))
             {
                 s_dragContext.isDragging = true;
@@ -154,8 +157,13 @@ namespace Window
             }
             return 0;
         }
+
         case WM_LBUTTONUP:
         {
+            POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+            const float mouseX = pt.x * scaleX;
+            const float mouseY = pt.y * scaleY;
+
             if (s_dragContext.isDragging)
             {
                 s_dragContext.isDragging = false;

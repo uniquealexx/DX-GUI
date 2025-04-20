@@ -30,11 +30,26 @@ namespace GUI::Framework
         float borderColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
         GUI::m_pRenderer->DrawRect(absX, absY, m_width, m_height, borderColor);
 
+        // Render child widgets first
         for (auto& child : m_children)
         {
-            child->Render(absX, absY); 
+            child->Render(absX, absY);
+        }
+
+        // Render widgets
+        for (auto& widget : m_widgets)
+        {
+            widget->Render(absX, absY);
         }
     }
+
+    void CChild::AddWidget(std::unique_ptr<IWidget> widget)
+    {
+        if (widget) {
+            m_widgets.emplace_back(std::move(widget));
+        }
+    }
+
     void CChild::SetPosition(float x, float y)
     {
         m_x = x;
@@ -77,6 +92,45 @@ namespace GUI::Framework
     {
         m_children.emplace_back(std::move(child));
         UpdateChildLayout();
+    }
+
+    bool CChild::HandleWidgetEvents(float mouseX, float mouseY, bool isMouseDown)
+    {
+        float localMouseX = mouseX - m_x;
+        float localMouseY = mouseY - m_y;
+
+        // Проверяем, находится ли курсор внутри child
+        if (localMouseX < 0 || localMouseX > m_width ||
+            localMouseY < 0 || localMouseY > m_height)
+        {
+            return false;
+        }
+
+        for (auto it = m_widgets.rbegin(); it != m_widgets.rend(); ++it)
+        {
+            auto& widget = *it;
+            if (widget->IsHovered(localMouseX, localMouseY))
+            {
+                if (isMouseDown)
+                {
+                    if (widget->HandleMouseClick(localMouseX, localMouseY))
+                    {
+                        return true; 
+                    }
+                }
+                return true;
+            }
+        }
+
+        for (auto& child : m_children)
+        {
+            if (child->HandleWidgetEvents(localMouseX, localMouseY, isMouseDown))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void CChild::UpdateChildLayout()

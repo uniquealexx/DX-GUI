@@ -20,6 +20,9 @@
     <ClCompile Include="Child.cpp">
       <Filter>GUI\Framework\Child</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>GUI\Framework\Widget\Button</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Window">
@@ -46,6 +49,12 @@
     <Filter Include="GUI\Framework\Child">
       <UniqueIdentifier>{0f65db33-987d-42c2-a741-7436e1f28b8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Framework\Widget">
+      <UniqueIdentifier>{af2fbc9c-85ec-408b-ae98-ce438ab17eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Framework\Widget\Button">
+      <UniqueIdentifier>{9a4c991d-a1b1-4652-88b8-79a0a9bfbcbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.hpp">
@@ -71,6 +80,12 @@
     </ClInclude>
     <ClInclude Include="Child.hpp">
       <Filter>GUI\Framework\Child</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.hpp">
+      <Filter>GUI\Framework\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.hpp">
+      <Filter>GUI\Framework\Widget\Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
